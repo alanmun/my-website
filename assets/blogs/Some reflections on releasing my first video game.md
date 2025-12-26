@@ -1,14 +1,18 @@
+![920x430_v2](/assets/blogs/attachments/920x430_v2.png)
+
 # Introduction
-I am wrapping up on my 1.0.0 release of *My New Computer*, a short and experimental mystery investigation game. I'll drop some quick stats about my story: 
-- The game was 100% created by myself. I did use free, open content in my game with necessary permissions (for music and for some 3D assets) 
-- I am entirely self-taught both in terms of game development and the mediocre artistry you'll encounter when you play my game (there's a phrase in gamedev circles called "programmer art", it refers to art made by someone who clearly isn't well versed at art and comes from a programming background... yeah)
-	- I did go to school and work as a software engineer focusing mostly on backend though. So I have adjacent longstanding experience.
-- All in all, my efforts took about 13 months (I started around November 2024)
-	-  I spent about ~6 hours a week on average across those 13 months. I didn't record my time spent on the project, this is just a rough guesstimate. Many weeks I didn't touch it at all, while other weeks I spent upwards of 40 hours on it.
+I am wrapping up on my 1.0.0 release of [*My New Computer*](https://store.steampowered.com/app/4130830/My_New_Computer/), a short and experimental mystery investigation game. I'll drop some quick stats about my story: 
 - This is my 5th game I've ever started, and my 1st game to ever make it to the finish line
 	- The first was a visual novel in Unity.
 	- The second was a 2D platformer in Unity.
 	- The third and fourth were LLM text adventures like [Zork](https://en.wikipedia.org/wiki/Zork). They both directly and iteratively inspired *My New Computer*.
+- The game was 100% created by myself. I did use free, open content in my game with necessary permissions (for music and for some 3D assets) 
+	- I did this sort of as a challenge, and sort of to keep costs down for a project that I didn't know if I'd finish or not. The game's experimental nature meant that at any time I could just decide that it just wasn't good enough for anyone to play and therefore it should become game project #5 to go into the recycling bin.
+	- My next game will definitely **not** be a single person endeavor. The next step for me is to start collaborating, for sure.
+- I am entirely self-taught both in terms of game development and the mediocre artistry you'll encounter when you play my game (there's a phrase in gamedev circles called "programmer art", it refers to art made by someone who clearly isn't well versed at art and comes from a programming background... yeah)
+	- I did go to school and work as a software engineer focusing mostly on backend though. So I have adjacent longstanding experience.
+- All in all, my efforts took about 13 months (I started around November 2024)
+	-  I spent about ~6 hours a week on average across those 13 months. I didn't record my time spent on the project, this is just a rough guesstimate. Many weeks I didn't touch it at all, while other weeks I spent upwards of 40 hours on it.
 
 # What I learned during this journey
 ## Programming soft-skills/meta-skills
@@ -70,7 +74,7 @@ Out of those three, I used GPT-Image-1.5 the most, especially towards the end wh
 
 Nano Banana Pro seems so sexy when you first try it, then you find out it has an insane amount of failure modes and if you stray off the path a little bit it quickly becomes inflexibly useless. Additionally, **JESUS H. CHRIST IS GOOGLE'S AI CHAT UI SO BAD.** It was a total roll of the dice whether it would cooperate with me that day or not. Some days I'd actually be able to generate, other days it would fail entirely. You'd also just log in and see that they ripped out 3 features you depended on and valued for seemingly no reason. I really hated using google's AI, I didn't feel that I could rely on it at all.
 
-Overall, my goal was not to hide that my art is AI generated, but make it look so good that people could see past it and enjoy my game for what it is.
+Overall, my goal was not to *hide that my art is AI generated, but make it look so good that people could see past it and enjoy my game for what it is.*
 
 I'll let you be the judge of how well I did, but here are some of the AI art I made for the game (all of these were gpt-image-1.5):
 
@@ -96,4 +100,13 @@ I tried to hand make art where needed while designing my game so that art matter
 ## Final remarks
 ### Appreciating the makers, creators, and do-ers
 
-Above all, making my own game and seeing it to the finish line really made me appreciate just how *hard* it is to make any art intended for public consumption. Just the sheer amount of work you have to put in... just to make something mediocre. I can't fully imagine how hard people like Daniel Mullins, Jonathan Blow, or Garry Newman have worked to make the games they've made and to have the impact they've had over the years, but I can start to fathom it after undertaking this project.
+Above all, making my own game and seeing it to the finish line really made me appreciate just how *hard* it is to make any art intended for public consumption. Just the sheer amount of work I have put in... just to make something mediocre. I can't fully imagine how hard people like Daniel Mullins, Jonathan Blow, or Garry Newman have worked to make the games they've made and to have the impact they've had over the years, but I think I can start to fathom it after undertaking this project.
+
+Making my own game has definitely put pause in the video game, or really art in general, critic inside of me. Obviously if something sucks ass I'll still say that, but I have a newfound understanding of just how hard it is to make something that's good or even just sucks a little butt.
+
+
+
+
+_Whoa, you really made it this far? Wanna check out the game?_
+[Steam](https://store.steampowered.com/app/4130830/My_New_Computer/)
+[itch.io](https://secondsave.itch.io/my-new-computer)
