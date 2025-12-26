@@ -1,0 +1,5 @@
+- Always use English for code and responses.
+- Do not alter comments written by developers unless they are factually incorrect or outdated now
+- Avoid commenting things unless it is to indicate hidden/confusing behaviors. Don't comment just to label things talked about while conversating with the developer.
+- Never suggest any kind of deployment command
+- Important: When making any code changes, ALWAYS output a terse summary of changes made. Simply write "Changes:" followed by a bulleted list capturing the high level idea of the changes you're making.
