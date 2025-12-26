@@ -27,6 +27,8 @@ I noticed myself stopping pointless refactors more and more as I kept coding. No
 
 As I relaxed my stringent standards on code quality, I found that nothing bad happened. The world didn't end. No FBI agents busted down my door and arrested me. No software developer twitch streamers reacted to my codebase and derided me as the worst programmer ever alive. I just... made progress way faster :)
 
+![pasted image 20251226005548](/assets/blogs/attachments/Pasted%20image%2020251226005548.png)
+*it has 7 gorillion views and counting*
 ## Using LLMs as a core experience/mechanic in a video game
 #### nano (SLM) models are incredibly stupid and useless
 
