@@ -29,6 +29,38 @@ function groupByMonth(posts) {
   return Object.entries(buckets).sort((a,b) => (a[0] < b[0] ? 1 : -1));
 }
 
+function getRouteFromHash() {
+  const raw = (window.location.hash || '').replace(/^#/, '');
+  if (!raw || raw === 'home') return { type: 'home' };
+
+  if (raw.startsWith('blog=')) {
+    const qs = raw.slice('blog='.length);
+    const params = new URLSearchParams(qs);
+    const path = params.get('path');
+    const title = params.get('title');
+    if (path) return { type: 'blog', path, title: title || '' };
+  }
+
+  return { type: 'home' };
+}
+
+function setHomeRoute() {
+  window.location.hash = 'home';
+}
+
+function setBlogRoute(path, title) {
+  const params = new URLSearchParams();
+  params.set('path', path);
+  if (title) params.set('title', title);
+  window.location.hash = `blog=${params.toString()}`;
+}
+
+function renderHome() {
+  const content = document.getElementById('content');
+  if (!content) return;
+  content.innerHTML = HOME_HTML;
+  window.scrollTo(0, 0);
+}
 
 function renderBlogsList(posts) {
   const container = document.getElementById('blogs-list');
@@ -44,7 +76,6 @@ function renderBlogsList(posts) {
   for (const [ym, list] of grouped) {
     const section = document.createElement('section');
 
-
     const dateStamp = document.createElement('small');
     dateStamp.textContent = `--- ${ym} ---`; // e.g., 2025-05
     dateStamp.classList.add('datestamp');
@@ -59,7 +90,7 @@ function renderBlogsList(posts) {
       a.textContent = post.title;
       a.addEventListener('click', (e) => {
         e.preventDefault();
-        showBlog(post.path, post.title);
+        setBlogRoute(post.path, post.title);
       });
       li.appendChild(a);
       ul.appendChild(li);
@@ -134,11 +165,7 @@ function wireNav() {
   const homeBtn = document.getElementById('nav-home');
   if (homeBtn) {
     makeAccessibleButton(homeBtn, () => {
-      const content = document.getElementById('content');
-      if (content) {
-        content.innerHTML = HOME_HTML;
-        window.scrollTo(0, 0);
-      }
+      setHomeRoute();
     });
   }
 
@@ -154,9 +181,23 @@ function wireNav() {
   }
 }
 
+function handleRoute() {
+  const route = getRouteFromHash();
+  if (route.type === 'blog') {
+    showBlog(route.path, route.title);
+    return;
+  }
+  renderHome();
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
   const content = document.getElementById('content');
   if (content) HOME_HTML = content.innerHTML;
   wireNav();
   await loadBlogs();
+  handleRoute();
+});
+
+window.addEventListener('hashchange', () => {
+  handleRoute();
 });
