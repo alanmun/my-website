@@ -1,6 +1,6 @@
 I was reading Gary Newman's [*How do I get into the Game industry*](https://garry.net/posts/how-do-i-get-into-the-game-industry) blog post earlier today and enjoyed it very much.  I'll highlight one part at the end, where one of the things he said stuck with me:
 
-> I can't speak from other companies, but I can tell you what I look at when we get an application.  
+> I can't speak from other companies, but I can tell you what I look at when we get an application. 
   >
 >You should really see it from my point of view. You want me to pay you? What can you do for me?  
   >
