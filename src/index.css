@@ -1,12 +1,20 @@
 :root {
-  background: black;
-  /* background: #1a2833; */
-  /* --background-color: #1a2833; */
+  background: #0b0c0f;
+  --background-color: #0b0c0f;
+  --surface-color: #12151b;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --text-primary: #f2f4f8;
+  --text-muted: #c9cfd4;
+  --text-subtle: #bdbdbd;
+  --card-background-color: #1b2028;
+  --content-max-width: 920px;
+  --content-pad: 2.5rem 2.25rem 4rem 2.25rem;
+  --heading-line-height: 1.15;
+  --body-line-height: 1.7;
   --sidebar-width: 280px;
   --sidebar-pad: 16px;
   --sidebar-child-indent: 16px;
-
-  --figure-text-color: #bdbdbd;
+  --figure-text-color: var(--text-subtle);
 }
 
 .figure-caption-text {
@@ -16,7 +24,8 @@
 }
 
 p {
-  color: rgb(201, 207, 212);
+  color: var(--text-muted);
+  line-height: var(--body-line-height);
 }
 
 /* picocss adds a padding top and bottom of ~5-10%, I don't want the top padding*/
@@ -120,14 +129,15 @@ p {
   height: 100vh;
   width: var(--sidebar-width);
   padding: var(--sidebar-pad);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  background: black;
-  color: #e6eaf0;
+  padding-right: calc(var(--sidebar-pad) + 8px);
+  border-right: 1px solid var(--border-color);
+  background: var(--background-color);
+  color: var(--text-primary);
   overflow-y: auto;
 }
 
 .home-content>* {
-  color: white;
+  color: var(--text-primary);
 }
 
 .sidebar nav {
@@ -139,7 +149,7 @@ p {
 .nav-button {
   width: 100%;
   text-align: left;
-  color: inherit;
+  color: var(--text-primary);
   border: none;
   padding: 0.4rem 0;
   background: transparent;
@@ -167,6 +177,14 @@ p {
 
 .blogs-list a {
   font-size: 0.9rem;
+  display: inline-block;
+  padding: 0.2rem 0.4rem;
+  border-radius: 6px;
+}
+
+.blogs-list a.is-active {
+  background: var(--card-background-color);
+  color: var(--text-primary);
 }
 
 .blogs-list section {
@@ -179,8 +197,8 @@ p {
   width: 7rem;
   font-size: 20px;
   transform: scale(0.72);
-  color: lightgrey;
-  /* background-color: var(--card-background-color); */
+  color: var(--text-subtle);
+  white-space: nowrap;
 }
 
 #nav-projects {
@@ -197,7 +215,11 @@ p {
 }
 
 .main-content>* {
-  padding: 5rem 12rem 12rem 12rem;
+  width: min(100%, var(--content-max-width));
+  padding: var(--content-pad);
+  background: var(--card-background-color);
+  border-radius: 18px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
 }
 
 .socials {
@@ -206,7 +228,7 @@ p {
 }
 
 .sidebar .socials a {
-  color: white;
+  color: var(--text-primary);
   text-decoration: none;
 }
 
@@ -216,16 +238,21 @@ p {
   color: white;
 }
 
-.nav-button {
-  color: white;
-}
-
 .sidebar span {
-  color: white;
+  color: var(--text-primary);
 }
 
 #nav-resume {
   margin-left: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#nav-resume .external-indicator {
+  margin-left: auto;
+  opacity: 0.8;
+  padding-right: 0.4rem;
 }
 
 /* Ensure consistent left alignment for all sidebar nav items */
@@ -238,11 +265,15 @@ p {
 .sidebar nav .nav-button,
 .sidebar nav details.nav-group>summary,
 .sidebar nav a.nav-button {
-  display: block;
+  display: flex;
+  align-items: center;
   width: 100%;
   text-align: left;
   padding-left: 1rem;
   margin: 0;
+  margin-right: 0.5rem;
+  min-height: 2.4rem;
+  line-height: 1.3;
 }
 
 /* Remove default disclosure marker from summary and add right-aligned caret */
@@ -305,6 +336,71 @@ p {
 .sidebar nav .socials a[href*="github"] .icon {
   outline: 1px solid #ffffff;
 }
+.home-title {
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.main-content h1,
+.main-content h2,
+.main-content h3 {
+  color: var(--text-primary);
+  line-height: var(--heading-line-height);
+  margin-bottom: 0.75rem;
+}
+
+.main-content h1 {
+  font-size: clamp(2.1rem, 2.6vw, 2.8rem);
+}
+
+.main-content h2 {
+  font-size: clamp(1.6rem, 2.2vw, 2.1rem);
+}
+
+.main-content h3 {
+  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+}
+
+.main-content a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: rgba(242, 244, 248, 0.35);
+  text-underline-offset: 0.2em;
+}
+
+.main-content a:hover,
+.main-content a:focus-visible {
+  color: var(--text-muted);
+  text-decoration-color: rgba(242, 244, 248, 0.6);
+}
+
+.blog-post {
+  width: 100%;
+}
+
+.blog-post h1 {
+  margin-bottom: 1.5rem;
+}
+
+.sidebar nav .nav-button,
+.sidebar nav details.nav-group>summary,
+.sidebar nav a.nav-button {
+  background: var(--card-background-color);
+  border-radius: 8px;
+  padding-top: 0.45rem;
+  padding-bottom: 0.45rem;
+}
+
+.sidebar nav .nav-button.contrast.outline {
+  border: 1px solid var(--border-color);
+  background: var(--card-background-color);
+}
+
+.sidebar nav .nav-button:hover,
+.sidebar nav details.nav-group>summary:hover,
+.sidebar nav a.nav-button:hover {
+  background: var(--surface-color);
+}
 
 @media (max-width: 900px) {
   .app-layout {
@@ -314,8 +410,13 @@ p {
   .sidebar {
     position: static;
     height: auto;
-    width: auto;
+    width: 100%;
+    max-width: none;
     border-right: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .main-content {
+    padding: 1.75rem 1rem 2.75rem;
   }
 }

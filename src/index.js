@@ -55,6 +55,14 @@ function setBlogRoute(path, title) {
   window.location.hash = `blog=${params.toString()}`;
 }
 
+function setActiveBlog(path) {
+  const links = document.querySelectorAll('#blogs-list a[data-path]');
+  links.forEach((link) => {
+    const isActive = link.dataset.path === path;
+    link.classList.toggle('is-active', isActive);
+  });
+}
+
 function renderHome() {
   const content = document.getElementById('content');
   if (!content) return;
@@ -77,7 +85,7 @@ function renderBlogsList(posts) {
     const section = document.createElement('section');
 
     const dateStamp = document.createElement('small');
-    dateStamp.textContent = `--- ${ym} ---`; // e.g., 2025-05
+    dateStamp.textContent = `— ${ym} —`; // e.g., 2025-05
     dateStamp.classList.add('datestamp');
     section.appendChild(dateStamp);
 
@@ -88,8 +96,10 @@ function renderBlogsList(posts) {
       const a = document.createElement('a');
       a.href = '#';
       a.textContent = post.title;
+      a.dataset.path = post.path;
       a.addEventListener('click', (e) => {
         e.preventDefault();
+        setActiveBlog(post.path);
         setBlogRoute(post.path, post.title);
       });
       li.appendChild(a);
@@ -99,6 +109,9 @@ function renderBlogsList(posts) {
     section.appendChild(ul);
     container.appendChild(section);
   }
+
+  const route = getRouteFromHash();
+  if (route.type === 'blog') setActiveBlog(route.path);
 }
 
 async function showBlog(mdPath, title) {
@@ -181,12 +194,29 @@ function wireNav() {
   }
 }
 
+function setSidebarForRoute(route) {
+  const blogs = document.getElementById('nav-blogs');
+  const socials = document.getElementById('nav-socials');
+  if (!blogs || !socials) return;
+  if (route.type === 'blog') {
+    blogs.open = true;
+    socials.open = false;
+    return;
+  }
+  blogs.open = false;
+  socials.open = true;
+}
+
 function handleRoute() {
   const route = getRouteFromHash();
   if (route.type === 'blog') {
     showBlog(route.path, route.title);
+    setActiveBlog(route.path);
+    setSidebarForRoute(route);
     return;
   }
+  setSidebarForRoute(route);
+  setActiveBlog('');
   renderHome();
 }
 
