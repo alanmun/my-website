@@ -1,5 +1,6 @@
 ![920x430_v3](/assets/blogs/attachments/920x430_v3.png)
-At 29 and after a little more than a year, I finally accomplished a long-standing dream of mine. I shipped a video game!!! It's a short story mystery with a bit of an experimental edge to it (it uses AI as a core game mechanic). It's called [*My New Computer*](https://store.steampowered.com/app/4130830/My_New_Computer/), and it's available on Steam or itch.io if you want to take a peek.
+
+At 29 and after a little more than a year, I finally accomplished a long-standing dream of mine. I shipped a video game!!! It's a short story mystery with a bit of an experimental edge to it- it actually uses AI as a core game mechanic, not as an ancillary feature nor for development, the game is centered around talking to AI characters through a chat app on your computer in order to progress through the story. It's called [*My New Computer*](https://store.steampowered.com/app/4130830/My_New_Computer/), and it's available on Steam or itch.io if you want to play it.
 
 This post is a loose dev diary about what surprised me while actually shipping a solo game and why I'm so glad I stuck it out. I'll touch on topics like learning to control scope, perfectionism, and what it was like to wrangle LLMs together to act as characters for the game's experience. 
 
@@ -21,6 +22,7 @@ I'll drop some quick stats about my journey:
 
 I've had some people ask me how I managed to release this game in an awe-inspired way which kind of sparks dread in me. The way they say it makes me think they really believe they can just start coding and pop something out after a year that is incredible with no prior experience, and that's just not how these things works. I learned this from studying the stories of successful indie devs like Toby Fox, who seemingly popped out of nowhere with smash hits like *Undertale*. Toby actually got his start doing smaller deliverables like making ROM hacks for Earthbound where he got to practice telling his own stories and directing his own plot and designing his own characters while most of the art/assets were kinda already there thanks to being a derivative of a prior work, a Nintendo title. He also contributed to other projects/communities like Homestuck and built up experience that way too. To be honest, I think making a game as a solo indie dev is kind of a suicide mission if you're not highly skilled and ready for the emotional challenges of it. For me at least, it kinda felt like finishing some of the tutorial levels in Beat Saber and then just going straight to an Expert+ difficulty song.
 ![beat_saber](/assets/blogs/attachments/beat_saber.gif)
+
 *OH GOD WHAT IS HAPPENING*
 
 I hope I'm not making it sound awful. It wasn't, and I learned and grew a lot during this time. I just feel like I have to set these expectations anytime someone comes up and asks me how they can/should get into game development. There's a lot of 1AM moments staring at your screen in the dark, neck hurting because it's been hours sitting in the same position and you refuse to get up from your seat because shaders shouldn't be this fucking hard to figure out and god dammit I'm so close why won't it just do the ffuckginthing sdiufhsduigbjk
@@ -76,7 +78,9 @@ Considering cost, I feared that if I released with gpt-4o or gpt-4.1 as the unde
 Finetuning took so long, I probably burned about 2 months of effort researching and instrumenting a harness to basically let me run the game with GPT-4.1 as the roleplaying model, play through chats, collect conversations, and quickly touch them up when GPT-4.1 handled scenarios poorly and didn't act as the character should've. I would have a special hotkey (=) which when pressed and submitted basically said "Keep the last chat as a finetuning example, and if I have anything included with it, replace the AI reply with my desired response". This let me do something like:
 
 > Dad: Gotta go, your mom wants to ask me something
+> 
 > Player: oh ok, sounds good
+> 
 > Dad: Hey bud, I think we're exhausted from this dinner. We're both thinking of coming home now.
 
 At this point, I'd hit the hotkey and change it to something like "I'm thinking of coming home now", changing the "we" to "I" because the mother doesn't want to go home yet for story reasons and a chat reply like that from the dad would break the plot.
@@ -122,8 +126,7 @@ If you're a fan of "thinky" type games (strategy + puzzle), you may have heard o
 
 I thought that this strategy of "Get started fast and cheap with AI art, replace later" was a perfect fit for me too, as an also unknown nobody game dev with limited resources. Release it cheap and fast and then see how well the idea fleshes out to your audience. If its successful, I could always swap out the art later and pay someone to make better art for me. I don't yet think I'm anywhere at that point yet. 
 
-I kept telling myself: 
-> My goal was not to *hide that my art is AI generated, but make it look so good that people could see past it and enjoy my game for what it is.*
+I kept telling myself that my goal was not to *hide that my art is AI generated, but make it look so good that people could see past it and enjoy my game for what it is.*
 
 #### Examples
 I'll let you be the judge of how well I did, but here are some of the AI generated assets for the game (all of these were gpt-image-1.5. Also worth keeping in mind that for most of these assets, you are viewing them far larger than they are ever displayed within Steam or itch.io):
@@ -161,14 +164,14 @@ I mostly stuck to:
 
 Out of those three, I used GPT-Image-1.5 the most, especially towards the end when finalizing. I noticed that before 1.5, AI image gens that I tried to iterate on would progressively degrade. They'd get more and more noisy and glitchy as I fed them back into the AI. 1.5 largely eliminates this thankfully, which really saved me and made it possible for me to make my promo/store art for basically nothing except the time and effort I put in designing them.
 
-Nano Banana Pro seems so sexy when you first try it, then you find out it has an insane amount of failure modes and if you stray off the path a little bit it quickly becomes inflexibly useless. Additionally, **LORD ALMIGHTY IS GOOGLE'S AI STUDIO SO BAD.** It was a total roll of the dice whether it would cooperate with me that day or not. Some days I'd actually be able to generate, other days it would fail entirely. Additionally, you'd just log in and see that they ripped out 3 features you depended on and valued for seemingly no reason. I really hated using google's AI, I didn't feel that I could rely on it at all throughout development and by the end of my time with AI generated art I learned to treat it as a last resort.
+Nano Banana Pro seems sexy when you first try it, then you find out it has an insane amount of failure modes and if you stray off the path a little bit it quickly becomes inflexibly useless. Additionally: **dear god is google's ai studio so freaking bad.** It was a total roll of the dice whether it would cooperate with me that day or not. Some days I'd actually be able to generate, other days it would flash an error on your screen and refuse to output anything entirely. Additionally, you'd just log in and see that they ripped out 3 features you depended on and valued for seemingly no reason. I really hated using google's AI, I didn't feel that I could rely on it at all throughout development and by the end of my time with AI generated art I learned to treat it as a last resort.
 
 ## Final remarks
 ### Appreciating the makers, creators, and do-ers
 
-Above all, making my own game and seeing it to the finish line really made me appreciate just how *hard* it is to make any piece of art intended for public consumption. Just the sheer amount of work I have put in... just to make something... mediocre. While I still can't fully imagine how hard game developers like Daniel Mullins, Jonathan Blow, or Garry Newman have worked to make the games they've made and to have the impact they've had over the years. After undertaking this project however, I think I can start to fathom it.
+Above all, making my own game and seeing it to the finish line really made me appreciate just how *hard* it is to make any piece of art intended for public consumption. I mean the sheer amount of work I have put in over this past year... just to make something... okay.  It's still difficult to imagine the amount of blood and sweat that accomplished game developers and artists have put in to the games they've made- But after undertaking this project, my eyes are a little more opened to a part of the human experience I didn't really ever peek at before.
 
-Making my own game has definitely put pause in the art critic inside of me. Obviously if something sucks I'll still say that, but I have a newfound understanding of just how hard it is to make something amazing or even just okay.
+Making my own game has definitely put pause in the art critic inside of me. Obviously if something sucks I'll still say that, but I have a newfound understanding and respect of just how hard it is to make something amazing or even just okay. Watching crappy 3/10 IMDB rated films hits a little different now... just a little.
 
 _Whoa, you really made it this far? Wanna check out the game? 🙏🏻_
 [Steam](https://store.steampowered.com/app/4130830/My_New_Computer/)
