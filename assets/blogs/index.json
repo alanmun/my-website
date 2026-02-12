@@ -1,21 +1,25 @@
 [
   {
     "title": "im bloggin",
+    "slug": "im-bloggin",
     "path": "/assets/blogs/im%20bloggin.md",
     "date": "2025-08-31"
   },
   {
     "title": "My Blogging Workflow",
+    "slug": "my-blogging-workflow",
     "path": "/assets/blogs/My%20Blogging%20Workflow.md",
     "date": "2025-09-01"
   },
   {
     "title": "Reflections on releasing my first game as a solo developer",
+    "slug": "reflections-on-releasing-my-first-game-as-a-solo-developer",
     "path": "/assets/blogs/Reflections%20on%20releasing%20my%20first%20game%20as%20a%20solo%20developer.md",
     "date": "2025-12-15"
   },
   {
     "title": "what its like to be a twisted fucking sociopath monster freakazoid",
+    "slug": "what-its-like-to-be-a-twisted-fucking-sociopath-monster-freakazoid",
     "path": "/assets/blogs/what%20its%20like%20to%20be%20a%20twisted%20fucking%20sociopath%20monster%20freakazoid.md",
     "date": "2025-12-23"
   }
