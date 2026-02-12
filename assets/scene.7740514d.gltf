@@ -1,0 +1,284 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 170,
+      "max": [
+        3.7736656665802,
+        3.112229347229004,
+        1.0282139778137207
+      ],
+      "min": [
+        -0.20011013746261597,
+        -0.33336710929870605,
+        -0.20154084265232086
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 2040,
+      "componentType": 5126,
+      "count": 170,
+      "max": [
+        0.9567167162895203,
+        0.9799985885620117,
+        0.9806534647941589
+      ],
+      "min": [
+        -0.974881649017334,
+        -0.9999985694885254,
+        -0.9828999638557434
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 170,
+      "max": [
+        0.974884569644928,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "min": [
+        -0.9333720803260803,
+        -0.9951543211936951,
+        -0.9995321035385132,
+        -1.0
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 170,
+      "max": [
+        0.9661125540733337,
+        0.9980080127716064
+      ],
+      "min": [
+        -0.0740140974521637,
+        0.00199203216470778
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 288,
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Cxrly97 (https://sketchfab.com/Cxrly97)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/3d-models/leaf-ccc5090b0a9a4368b5376cd93a1e495d",
+      "title": "Leaf"
+    },
+    "generator": "Sketchfab-12.68.0",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 1152,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 1360,
+      "byteOffset": 1152,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 4080,
+      "byteOffset": 2512,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 2720,
+      "byteOffset": 6592,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 9312,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/lambert5_baseColor.png"
+    },
+    {
+      "uri": "textures/lambert5_metallicRoughness.png"
+    },
+    {
+      "uri": "textures/lambert5_normal.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "lambert5",
+      "normalTexture": {
+        "index": 2
+      },
+      "pbrMetallicRoughness": {
+        "baseColorTexture": {
+          "index": 0
+        },
+        "metallicRoughnessTexture": {
+          "index": 1
+        }
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "pCube4_lambert5_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        2.220446049250313e-16,
+        -1.0,
+        0.0,
+        0.0,
+        1.0,
+        2.220446049250313e-16,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "Sketchfab_model"
+    },
+    {
+      "children": [
+        2
+      ],
+      "matrix": [
+        1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+        0.0,
+        -1.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ],
+      "name": "leaf5.fbx"
+    },
+    {
+      "children": [
+        3
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        4
+      ],
+      "matrix": [
+        0.9984525305951711,
+        -0.04429291395100393,
+        -0.033625614073615084,
+        0.0,
+        0.044534077562473615,
+        0.9989869990991591,
+        0.006456900689676376,
+        0.0,
+        0.03330555634962917,
+        -0.007944394538649263,
+        0.9994136413475934,
+        0.0,
+        -1.9914604425430298,
+        -1.3794031143188477,
+        0.0,
+        1.0
+      ],
+      "name": "pCube4"
+    },
+    {
+      "mesh": 0,
+      "name": "pCube4_lambert5_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "Sketchfab_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    }
+  ]
+}
