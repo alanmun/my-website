@@ -38,14 +38,8 @@ function toPosix(p) {
   return p.split(path.sep).join('/');
 }
 
-function slugify(value) {
-  return String(value || '')
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
+function isValidId(value) {
+  return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(String(value || ''));
 }
 
 function parseFrontMatter(content) {
@@ -184,6 +178,16 @@ async function walkAndCopy(srcDir, relBase, index, assetIndex) {
       await ensureDir(path.dirname(destAbs));
       const raw = await fsp.readFile(abs, 'utf8');
       const meta = parseFrontMatter(raw);
+      const id = (meta.id || '').trim();
+      if (!id) {
+        throw new Error(`[pull-blogs] Missing required front matter id in: ${abs}`);
+      }
+      if (!isValidId(id)) {
+        throw new Error(
+          `[pull-blogs] Invalid id "${id}" in: ${abs}. ` +
+          'Expected lowercase kebab-case: /^[a-z0-9]+(?:-[a-z0-9]+)*$/'
+        );
+      }
       const stripped = stripFrontMatter(raw);
 
       // Rewrite Obsidian embeds and stage assets for copy
@@ -213,10 +217,10 @@ async function walkAndCopy(srcDir, relBase, index, assetIndex) {
       const urlPath = encodeURI('/' + toPosix(path.join('assets', 'blogs', rel))); // e.g., /assets/blogs/subdir/file.md
       const date = isIsoDate(meta.created) ? meta.created : await getDateForFile(abs);
       const title = meta.title || base;
-      const slugBase = meta.slug || meta.id || title || base;
       index.push({
         title,
-        slug: slugify(slugBase),
+        id,
+        slug: id,
         path: urlPath,
         date
       });
@@ -250,16 +254,13 @@ async function main() {
 
     // Sort by title ascending for deterministic order
     index.sort((a, b) => a.title.localeCompare(b.title));
-    const seenSlugs = new Set();
+    const seenIds = new Set();
     for (const post of index) {
-      let slug = post.slug || slugify(post.title) || 'post';
-      if (seenSlugs.has(slug)) {
-        let n = 2;
-        while (seenSlugs.has(`${slug}-${n}`)) n += 1;
-        slug = `${slug}-${n}`;
+      const id = post.id;
+      if (seenIds.has(id)) {
+        throw new Error(`[pull-blogs] Duplicate id "${id}" found in blog index generation.`);
       }
-      seenSlugs.add(slug);
-      post.slug = slug;
+      seenIds.add(id);
     }
 
     const idxPath = path.join(DEST_DIR, 'index.json');

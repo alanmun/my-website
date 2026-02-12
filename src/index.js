@@ -9,32 +9,68 @@ const RESUME_URL = 'https://docs.google.com/document/d/1k2DykOWzGUJDyEUucN_9BKA7
 let HOME_HTML = '';
 let BLOG_POSTS = [];
 
-function toSlug(value) {
-  return String(value || '')
-    .normalize('NFKD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
-
 function normalizeBlogPosts(posts) {
   if (!Array.isArray(posts)) return [];
-  const seen = new Set();
   return posts
-    .filter((post) => post?.title && post?.path)
-    .map((post) => {
-      const slugBase = post.slug || post.title || post.path;
-      let slug = toSlug(slugBase) || 'post';
-      if (seen.has(slug)) {
-        let n = 2;
-        while (seen.has(`${slug}-${n}`)) n += 1;
-        slug = `${slug}-${n}`;
-      }
-      seen.add(slug);
-      return { ...post, slug };
-    });
+    .map((post) => ({ ...post, id: post?.id || post?.slug || '' }))
+    .filter((post) => post?.title && post?.path && post?.id);
+}
+
+function getPostId(post) {
+  if (!post) return '';
+  return post.id || post.slug || '';
+}
+
+function getRouteFromHash() {
+  const raw = (window.location.hash || '').replace(/^#/, '');
+  if (!raw || raw === 'home') return { type: 'home' };
+
+  if (raw.startsWith('blog=')) {
+    const encodedTarget = raw.slice('blog='.length);
+    const decodedTarget = decodeURIComponent(encodedTarget);
+    const looksLikeLegacyQuery = decodedTarget.includes('=') || decodedTarget.includes('&');
+    if (looksLikeLegacyQuery) {
+      const params = new URLSearchParams(decodedTarget);
+      const path = params.get('path');
+      const title = params.get('title');
+      if (path) return { type: 'blog', path, title: title || '' };
+    } else if (decodedTarget) {
+      return { type: 'blog', id: decodedTarget };
+    }
+  }
+
+  return { type: 'home' };
+}
+
+function setHomeRoute() {
+  window.location.hash = 'home';
+}
+
+function setBlogRoute(id) {
+  window.location.hash = `blog=${encodeURIComponent(id)}`;
+}
+
+function setActiveBlog(id) {
+  const links = document.querySelectorAll('#blogs-list a[data-blog-id]');
+  links.forEach((link) => {
+    const isActive = link.dataset.blogId === id;
+    link.classList.toggle('is-active', isActive);
+  });
+}
+
+function resolveBlogRoute(route, posts = BLOG_POSTS) {
+  if (!route || route.type !== 'blog' || !Array.isArray(posts)) return null;
+  if (route.id) return posts.find((p) => getPostId(p) === route.id) || null;
+  if (route.path) return posts.find((p) => p.path === route.path) || null;
+  if (route.title) return posts.find((p) => p.title === route.title) || null;
+  return null;
+}
+
+function replaceBlogHash(id) {
+  const nextHash = `#blog=${encodeURIComponent(id)}`;
+  if (window.location.hash !== nextHash) {
+    history.replaceState(null, '', nextHash);
+  }
 }
 
 // Helpers
@@ -56,58 +92,6 @@ function groupByMonth(posts) {
   Object.values(buckets).forEach(list => list.sort((a,b) => (b.date > a.date ? 1 : -1)));
   // return entries sorted by YYYY-MM desc
   return Object.entries(buckets).sort((a,b) => (a[0] < b[0] ? 1 : -1));
-}
-
-function getRouteFromHash() {
-  const raw = (window.location.hash || '').replace(/^#/, '');
-  if (!raw || raw === 'home') return { type: 'home' };
-
-  if (raw.startsWith('blog=')) {
-    const encodedTarget = raw.slice('blog='.length);
-    const decodedTarget = decodeURIComponent(encodedTarget);
-    const looksLikeLegacyQuery = decodedTarget.includes('=') || decodedTarget.includes('&');
-    if (looksLikeLegacyQuery) {
-      const params = new URLSearchParams(decodedTarget);
-      const path = params.get('path');
-      const title = params.get('title');
-      if (path) return { type: 'blog', path, title: title || '' };
-    } else if (decodedTarget) {
-      return { type: 'blog', slug: decodedTarget };
-    }
-  }
-
-  return { type: 'home' };
-}
-
-function setHomeRoute() {
-  window.location.hash = 'home';
-}
-
-function setBlogRoute(slug) {
-  window.location.hash = `blog=${encodeURIComponent(slug)}`;
-}
-
-function setActiveBlog(slug) {
-  const links = document.querySelectorAll('#blogs-list a[data-slug]');
-  links.forEach((link) => {
-    const isActive = link.dataset.slug === slug;
-    link.classList.toggle('is-active', isActive);
-  });
-}
-
-function resolveBlogRoute(route, posts = BLOG_POSTS) {
-  if (!route || route.type !== 'blog' || !Array.isArray(posts)) return null;
-  if (route.slug) return posts.find((p) => p.slug === route.slug) || null;
-  if (route.path) return posts.find((p) => p.path === route.path) || null;
-  if (route.title) return posts.find((p) => p.title === route.title) || null;
-  return null;
-}
-
-function replaceBlogHash(slug) {
-  const nextHash = `#blog=${encodeURIComponent(slug)}`;
-  if (window.location.hash !== nextHash) {
-    history.replaceState(null, '', nextHash);
-  }
 }
 
 function renderHome() {
@@ -138,16 +122,17 @@ function renderBlogsList(posts) {
 
     const ul = document.createElement('ul');
     for (const post of list) {
-      if (!post?.title || !post?.path || !post?.slug) continue;
+      const postId = getPostId(post);
+      if (!post?.title || !post?.path || !postId) continue;
       const li = document.createElement('li');
       const a = document.createElement('a');
       a.href = '#';
       a.textContent = post.title;
-      a.dataset.slug = post.slug;
+      a.dataset.blogId = postId;
       a.addEventListener('click', (e) => {
         e.preventDefault();
-        setActiveBlog(post.slug);
-        setBlogRoute(post.slug);
+        setActiveBlog(postId);
+        setBlogRoute(postId);
       });
       li.appendChild(a);
       ul.appendChild(li);
@@ -160,7 +145,7 @@ function renderBlogsList(posts) {
   const route = getRouteFromHash();
   if (route.type === 'blog') {
     const match = resolveBlogRoute(route, posts);
-    if (match?.slug) setActiveBlog(match.slug);
+    if (match) setActiveBlog(getPostId(match));
   }
 }
 
@@ -264,9 +249,10 @@ function handleRoute() {
     const post = resolveBlogRoute(route);
     if (post?.path && post?.title) {
       showBlog(post.path, post.title);
-      if (post.slug) {
-        setActiveBlog(post.slug);
-        replaceBlogHash(post.slug);
+      const postId = getPostId(post);
+      if (postId) {
+        setActiveBlog(postId);
+        replaceBlogHash(postId);
       }
     } else {
       showBlog(route.path || '', route.title || 'Unknown post');
