@@ -7,6 +7,35 @@ import { marked } from 'marked';
 const BLOG_INDEX_URL = '/assets/blogs/index.json';
 const RESUME_URL = 'https://docs.google.com/document/d/1k2DykOWzGUJDyEUucN_9BKA7eyEeuJnOn75vVY4Cdjs/edit?tab=t.0';
 let HOME_HTML = '';
+let BLOG_POSTS = [];
+
+function toSlug(value) {
+  return String(value || '')
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function normalizeBlogPosts(posts) {
+  if (!Array.isArray(posts)) return [];
+  const seen = new Set();
+  return posts
+    .filter((post) => post?.title && post?.path)
+    .map((post) => {
+      const slugBase = post.slug || post.title || post.path;
+      let slug = toSlug(slugBase) || 'post';
+      if (seen.has(slug)) {
+        let n = 2;
+        while (seen.has(`${slug}-${n}`)) n += 1;
+        slug = `${slug}-${n}`;
+      }
+      seen.add(slug);
+      return { ...post, slug };
+    });
+}
 
 // Helpers
 function toMonthKey(dateStr) {
@@ -34,11 +63,17 @@ function getRouteFromHash() {
   if (!raw || raw === 'home') return { type: 'home' };
 
   if (raw.startsWith('blog=')) {
-    const qs = raw.slice('blog='.length);
-    const params = new URLSearchParams(qs);
-    const path = params.get('path');
-    const title = params.get('title');
-    if (path) return { type: 'blog', path, title: title || '' };
+    const encodedTarget = raw.slice('blog='.length);
+    const decodedTarget = decodeURIComponent(encodedTarget);
+    const looksLikeLegacyQuery = decodedTarget.includes('=') || decodedTarget.includes('&');
+    if (looksLikeLegacyQuery) {
+      const params = new URLSearchParams(decodedTarget);
+      const path = params.get('path');
+      const title = params.get('title');
+      if (path) return { type: 'blog', path, title: title || '' };
+    } else if (decodedTarget) {
+      return { type: 'blog', slug: decodedTarget };
+    }
   }
 
   return { type: 'home' };
@@ -48,19 +83,31 @@ function setHomeRoute() {
   window.location.hash = 'home';
 }
 
-function setBlogRoute(path, title) {
-  const params = new URLSearchParams();
-  params.set('path', path);
-  if (title) params.set('title', title);
-  window.location.hash = `blog=${params.toString()}`;
+function setBlogRoute(slug) {
+  window.location.hash = `blog=${encodeURIComponent(slug)}`;
 }
 
-function setActiveBlog(path) {
-  const links = document.querySelectorAll('#blogs-list a[data-path]');
+function setActiveBlog(slug) {
+  const links = document.querySelectorAll('#blogs-list a[data-slug]');
   links.forEach((link) => {
-    const isActive = link.dataset.path === path;
+    const isActive = link.dataset.slug === slug;
     link.classList.toggle('is-active', isActive);
   });
+}
+
+function resolveBlogRoute(route, posts = BLOG_POSTS) {
+  if (!route || route.type !== 'blog' || !Array.isArray(posts)) return null;
+  if (route.slug) return posts.find((p) => p.slug === route.slug) || null;
+  if (route.path) return posts.find((p) => p.path === route.path) || null;
+  if (route.title) return posts.find((p) => p.title === route.title) || null;
+  return null;
+}
+
+function replaceBlogHash(slug) {
+  const nextHash = `#blog=${encodeURIComponent(slug)}`;
+  if (window.location.hash !== nextHash) {
+    history.replaceState(null, '', nextHash);
+  }
 }
 
 function renderHome() {
@@ -91,16 +138,16 @@ function renderBlogsList(posts) {
 
     const ul = document.createElement('ul');
     for (const post of list) {
-      if (!post?.title || !post?.path) continue;
+      if (!post?.title || !post?.path || !post?.slug) continue;
       const li = document.createElement('li');
       const a = document.createElement('a');
       a.href = '#';
       a.textContent = post.title;
-      a.dataset.path = post.path;
+      a.dataset.slug = post.slug;
       a.addEventListener('click', (e) => {
         e.preventDefault();
-        setActiveBlog(post.path);
-        setBlogRoute(post.path, post.title);
+        setActiveBlog(post.slug);
+        setBlogRoute(post.slug);
       });
       li.appendChild(a);
       ul.appendChild(li);
@@ -111,7 +158,10 @@ function renderBlogsList(posts) {
   }
 
   const route = getRouteFromHash();
-  if (route.type === 'blog') setActiveBlog(route.path);
+  if (route.type === 'blog') {
+    const match = resolveBlogRoute(route, posts);
+    if (match?.slug) setActiveBlog(match.slug);
+  }
 }
 
 async function showBlog(mdPath, title) {
@@ -149,7 +199,8 @@ async function loadBlogs() {
   try {
     const res = await fetch(BLOG_INDEX_URL, { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const posts = await res.json();
+    const posts = normalizeBlogPosts(await res.json());
+    BLOG_POSTS = posts;
     renderBlogsList(posts);
   } catch (e) {
     const container = document.getElementById('blogs-list');
@@ -210,8 +261,17 @@ function setSidebarForRoute(route) {
 function handleRoute() {
   const route = getRouteFromHash();
   if (route.type === 'blog') {
-    showBlog(route.path, route.title);
-    setActiveBlog(route.path);
+    const post = resolveBlogRoute(route);
+    if (post?.path && post?.title) {
+      showBlog(post.path, post.title);
+      if (post.slug) {
+        setActiveBlog(post.slug);
+        replaceBlogHash(post.slug);
+      }
+    } else {
+      showBlog(route.path || '', route.title || 'Unknown post');
+      setActiveBlog('');
+    }
     setSidebarForRoute(route);
     return;
   }

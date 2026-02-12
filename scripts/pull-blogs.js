@@ -38,6 +38,33 @@ function toPosix(p) {
   return p.split(path.sep).join('/');
 }
 
+function slugify(value) {
+  return String(value || '')
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function parseFrontMatter(content) {
+  const match = content.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*\r?\n?/);
+  if (!match) return {};
+
+  const meta = {};
+  const block = match[1];
+  const lines = block.split(/\r?\n/);
+  for (const line of lines) {
+    const kv = line.match(/^\s*([A-Za-z0-9_-]+)\s*:\s*(.+?)\s*$/);
+    if (!kv) continue;
+    const key = kv[1].toLowerCase();
+    const rawValue = kv[2].trim();
+    meta[key] = rawValue.replace(/^['"]|['"]$/g, '');
+  }
+  return meta;
+}
+
 // Remove a leading Obsidian/YAML front matter block if present
 function stripFrontMatter(content) {
   if (!content) return content;
@@ -128,6 +155,10 @@ async function getDateForFile(absPath) {
   }
 }
 
+function isIsoDate(value) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(String(value || ''));
+}
+
 async function ensureDir(dir) {
   await fsp.mkdir(dir, { recursive: true });
 }
@@ -152,6 +183,7 @@ async function walkAndCopy(srcDir, relBase, index, assetIndex) {
       const destAbs = path.join(DEST_DIR, rel);
       await ensureDir(path.dirname(destAbs));
       const raw = await fsp.readFile(abs, 'utf8');
+      const meta = parseFrontMatter(raw);
       const stripped = stripFrontMatter(raw);
 
       // Rewrite Obsidian embeds and stage assets for copy
@@ -179,9 +211,12 @@ async function walkAndCopy(srcDir, relBase, index, assetIndex) {
 
       const base = path.parse(entry.name).name; // filename without extension
       const urlPath = encodeURI('/' + toPosix(path.join('assets', 'blogs', rel))); // e.g., /assets/blogs/subdir/file.md
-      const date = await getDateForFile(abs);
+      const date = isIsoDate(meta.created) ? meta.created : await getDateForFile(abs);
+      const title = meta.title || base;
+      const slugBase = meta.slug || meta.id || title || base;
       index.push({
-        title: base,
+        title,
+        slug: slugify(slugBase),
         path: urlPath,
         date
       });
@@ -215,6 +250,17 @@ async function main() {
 
     // Sort by title ascending for deterministic order
     index.sort((a, b) => a.title.localeCompare(b.title));
+    const seenSlugs = new Set();
+    for (const post of index) {
+      let slug = post.slug || slugify(post.title) || 'post';
+      if (seenSlugs.has(slug)) {
+        let n = 2;
+        while (seenSlugs.has(`${slug}-${n}`)) n += 1;
+        slug = `${slug}-${n}`;
+      }
+      seenSlugs.add(slug);
+      post.slug = slug;
+    }
 
     const idxPath = path.join(DEST_DIR, 'index.json');
     await fsp.writeFile(idxPath, JSON.stringify(index, null, 2), 'utf8');
