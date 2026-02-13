@@ -136,9 +136,11 @@ I'll let you be the judge of how well I did, but here are some of the AI generat
 ![cosmo-defeated-achievement-icon](/assets/blogs/attachments/cosmo-defeated-achievement-icon.png)
 
 *Original Vertical Steam Library Capsule Art (v1)*:
+
 ![mnccapsulevertical_600x900](/assets/blogs/attachments/MNCCapsuleVertical_600x900.jpg)
 
 *After some iterating, current Vertical Steam Library Capsule art (v2) for the game*:
+
 ![heavydenoised_vertical_v2](/assets/blogs/attachments/heavydenoised_vertical_v2.png)
 
 
