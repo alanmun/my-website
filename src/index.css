@@ -382,6 +382,13 @@ p {
   margin-bottom: 1.5rem;
 }
 
+.main-content article img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1rem auto;
+}
+
 .blog-comments-card {
   margin-top: 1.25rem;
 }
