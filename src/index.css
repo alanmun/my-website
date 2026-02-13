@@ -382,6 +382,19 @@ p {
   margin-bottom: 1.5rem;
 }
 
+.blog-comments-card {
+  margin-top: 1.25rem;
+}
+
+.blog-comments {
+  margin: 0;
+  padding: 0;
+}
+
+.blog-comments h2 {
+  margin-bottom: 1rem;
+}
+
 .sidebar nav .nav-button,
 .sidebar nav details.nav-group>summary,
 .sidebar nav a.nav-button {

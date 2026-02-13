@@ -6,6 +6,14 @@ import { marked } from 'marked';
 
 const BLOG_INDEX_URL = '/assets/blogs/index.json';
 const RESUME_URL = 'https://docs.google.com/document/d/1k2DykOWzGUJDyEUucN_9BKA7eyEeuJnOn75vVY4Cdjs/edit?tab=t.0';
+const GISCUS_CONFIG = {
+  repo: import.meta.env.VITE_GISCUS_REPO || '',
+  repoId: import.meta.env.VITE_GISCUS_REPO_ID || '',
+  category: import.meta.env.VITE_GISCUS_CATEGORY || '',
+  categoryId: import.meta.env.VITE_GISCUS_CATEGORY_ID || '',
+  lang: import.meta.env.VITE_GISCUS_LANG || 'en',
+  theme: import.meta.env.VITE_GISCUS_THEME || 'preferred_color_scheme'
+};
 let HOME_HTML = '';
 let BLOG_POSTS = [];
 
@@ -149,7 +157,7 @@ function renderBlogsList(posts) {
   }
 }
 
-async function showBlog(mdPath, title) {
+async function showBlog(mdPath, title, postId = '') {
   const content = document.getElementById('content');
   if (!content) return;
   try {
@@ -162,11 +170,52 @@ async function showBlog(mdPath, title) {
         <h1>${title}</h1>
         ${html}
       </article>
+      <article class="blog-comments-card">
+        <section class="blog-comments">
+          <h2>Discuss</h2>
+          <div id="giscus-thread"></div>
+        </section>
+      </article>
     `;
+    mountGiscusThread(postId);
     window.scrollTo(0, 0);
   } catch (e) {
     content.innerHTML = `<p style="color:#f88">Failed to load blog: ${title}</p>`;
   }
+}
+
+function hasGiscusConfig() {
+  return Boolean(
+    GISCUS_CONFIG.repo &&
+    GISCUS_CONFIG.repoId &&
+    GISCUS_CONFIG.category &&
+    GISCUS_CONFIG.categoryId
+  );
+}
+
+function mountGiscusThread(postId) {
+  const host = document.getElementById('giscus-thread');
+  if (!host || !postId || !hasGiscusConfig()) return;
+
+  host.innerHTML = '';
+  const script = document.createElement('script');
+  script.src = 'https://giscus.app/client.js';
+  script.async = true;
+  script.crossOrigin = 'anonymous';
+  script.setAttribute('data-repo', GISCUS_CONFIG.repo);
+  script.setAttribute('data-repo-id', GISCUS_CONFIG.repoId);
+  script.setAttribute('data-category', GISCUS_CONFIG.category);
+  script.setAttribute('data-category-id', GISCUS_CONFIG.categoryId);
+  script.setAttribute('data-mapping', 'specific');
+  script.setAttribute('data-term', postId);
+  script.setAttribute('data-strict', '1');
+  script.setAttribute('data-reactions-enabled', '1');
+  script.setAttribute('data-emit-metadata', '0');
+  script.setAttribute('data-input-position', 'bottom');
+  script.setAttribute('data-theme', GISCUS_CONFIG.theme);
+  script.setAttribute('data-lang', GISCUS_CONFIG.lang);
+  script.setAttribute('data-loading', 'lazy');
+  host.appendChild(script);
 }
 
 function renderProjects() {
@@ -248,14 +297,14 @@ function handleRoute() {
   if (route.type === 'blog') {
     const post = resolveBlogRoute(route);
     if (post?.path && post?.title) {
-      showBlog(post.path, post.title);
       const postId = getPostId(post);
+      showBlog(post.path, post.title, postId);
       if (postId) {
         setActiveBlog(postId);
         replaceBlogHash(postId);
       }
     } else {
-      showBlog(route.path || '', route.title || 'Unknown post');
+      showBlog(route.path || '', route.title || 'Unknown post', route.id || '');
       setActiveBlog('');
     }
     setSidebarForRoute(route);
